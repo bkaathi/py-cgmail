@@ -12,14 +12,14 @@ def main(argv=sys.argv):
 
     if len(argv) <= 1:
         print("ERROR: No file path given")
-        sys.exit()
+        sys.exit(0)
 
     try:
         with open(argv[1]) as f:
             email = f.read()
     except FileNotFoundError:
         print("ERROR: File not found")
-        sys.exit()
+        sys.exit(0)
 
     #parse email into message and message parts
     message, message_parts = cgmail.parse_message(email)
