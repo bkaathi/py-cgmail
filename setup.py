@@ -30,7 +30,7 @@ setup(
     long_description='%s\n%s' % (read('README.rst'), re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))),
     author='Gabriel Iovino',
     author_email='giovino@gmail.com',
-    url='https://github.com/giovino/py-cgmail',
+    url='https://github.com/csirtgadgets/py-cgmail',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
