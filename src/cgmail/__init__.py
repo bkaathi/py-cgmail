@@ -75,23 +75,3 @@ def parse_message_parts(message_parts):
             d["payload"] = decoded_body[0]
         mail_parts.append(d)
     return mail_parts
-
-if __name__ == "__main__":    
-
-
-    ## for reference, to be removed at a later date
-
-    #parse email into message and message parts
-    message, message_parts = parse_message(email)
-
-    # get message headers from message
-    message_headers = parse_message_headers(message)
-    #pprint(message_headers)
-
-    # get message body from message
-    message_body = parse_message_body(message)
-    #print(message_body)
-
-    # get message parts
-    mail_parts = parse_message_parts(message_parts) # returns an array of dictionaries
-    #pprint(mail_parts)
