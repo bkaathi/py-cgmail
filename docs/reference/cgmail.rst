@@ -1,0 +1,5 @@
+cgmail
+======
+
+.. automodule:: cgmail
+    :members:

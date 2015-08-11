@@ -1,0 +1,31 @@
+# This file exists so you can easily regenerate your project.
+#
+# Unfortunatelly cookiecutter can't use this right away so
+# you have to copy this file to ~/.cookiecutterrc
+
+default_context:
+
+    c_extension_optional:      'no'
+    c_extension_support:       'no'
+    codacy:                    'no'
+    codeclimate:               'no'
+    codecov:                   'yes'
+    command_line_interface:    'plain'
+    coveralls:                 'no'
+    distribution_name:         'cgmail'
+    email:                     'giovino@gmail.com'
+    full_name:                 'Gabriel Iovino'
+    github_username:           'giovino'
+    landscape:                 'no'
+    package_name:              'cgmail'
+    project_name:              'py-cgmail'
+    project_short_description: '"A module that leverages pyzmail to parse email messages into json and parses urls out of the message body"'
+    release_date:              '2015-08-11'
+    repo_name:                 'py-cgmail'
+    scrutinizer:               'no'
+    sphinx_theme:              'readthedocs'
+    test_matrix_configurator:  'no'
+    test_runner:               'pytest'
+    version:                   '0.1.0'
+    website:                   'http://www.csirtgadgets.org'
+    year:                      '2015'
