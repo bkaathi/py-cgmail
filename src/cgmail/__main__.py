@@ -21,7 +21,7 @@ def main(argv=sys.argv):
         print("ERROR: File not found")
         sys.exit(0)
 
-    #parse email into message and message parts
+    # parse email into message and message parts
     message, message_parts = cgmail.parse_message(email)
 
     # get message headers from message
@@ -31,13 +31,13 @@ def main(argv=sys.argv):
     message_body = cgmail.parse_message_body(message)
 
     # get message parts
-    mail_parts = cgmail.parse_message_parts(message_parts) # returns an array of dictionaries
+    mail_parts = cgmail.parse_message_parts(message_parts)  # returns an array of dictionaries
 
     # dictionary of data structures
     d = {
-        'headers' : message_headers,
-        'message_body' : message_body,
-        'mail_parts' : mail_parts
+        'headers': message_headers,
+        'message_body': message_body,
+        'mail_parts': mail_parts
     }
     pprint(d)
 
