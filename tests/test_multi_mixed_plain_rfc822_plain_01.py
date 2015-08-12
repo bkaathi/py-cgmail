@@ -23,3 +23,10 @@ def test_message_parts():
     mail_parts = cgmail.parse_message_parts(message_parts) # returns an array of dictionaries
     assert mail_parts[0]['payload'].startswith('phishing message attached')
     assert mail_parts[1]['payload'].index('give me your credentials')
+
+def test_extract_urls():
+    message_body = cgmail.parse_message_body(message)
+    mail_parts = cgmail.parse_message_parts(message_parts) # returns an array of dictionaries
+    urls = cgmail.extract_urls(message_body, mail_parts)
+    assert 'http://www.example.com' in urls
+

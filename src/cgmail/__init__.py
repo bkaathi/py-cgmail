@@ -4,6 +4,26 @@ from pyzmail.parse import message_from_string as pyzmail_message_from_string
 from pyzmail.parse import get_mail_parts as pyzmail_get_mail_parts
 from pyzmail.parse import decode_text as pyzmail_decode_text
 
+try:
+    import re2 as re
+except ImportError:
+    import re
+
+# http://stackoverflow.com/questions/499345/regular-expression-to-extract-url-from-an-html-link
+# RE for URL extraction:
+# http://daringfireball.net/2010/07/improved_regex_for_matching_urls
+# http://daringfireball.net/misc/2010/07/url-matching-regex-test-data.text
+# https://gist.github.com/uogbuji/705383
+# GRUBER_URLINTEXT_PAT = re.compile(ur'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([
+# ^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
+
+# re.compile(r'http.?://[a-z,/,\.,\d,\?,=,\-,\+,#,_,&,;,\,,:,@,%,]*', re.IGNORECASE).findall(xxx)
+RE_URL_HTML = 'href=[\'"]?([^\'" >]+)'
+#RE_URL_PLAIN = r'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s(
+# )<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))'
+RE_URL_PLAIN = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+REPLACE = ['=\n', "\t", "\r", '\\n']
+
 
 def parse_message(email):
     message = pyzmail_message_from_string(email)
@@ -12,7 +32,7 @@ def parse_message(email):
 
 
 def parse_message_body(msg):
-    # Does do we need to process text/plain and text/html seperatly?
+    # Does do we need to process text/plain and text/html separately?
     body = None
     if msg.get_content_type() == "text/plain":
         body = msg.get_payload(decode=True)
@@ -78,3 +98,26 @@ def parse_message_parts(message_parts):
             d["payload"] = decoded_body[0]
         mail_parts.append(d)
     return mail_parts
+
+
+def extract_urls(message_body, mail_parts):
+
+    links = set()
+
+    if message_body:
+        urls = re.findall(RE_URL_PLAIN, message_body)
+
+        for u in urls:
+            links.add(u)
+
+    elif mail_parts:
+        for p in mail_parts:
+            if p['payload']:
+                urls = re.findall(RE_URL_PLAIN, p['payload'])
+
+                for u in urls:
+                    links.add(u)
+    else:
+        return links
+
+    return links
