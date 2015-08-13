@@ -1,6 +1,6 @@
 import sys
 import cgmail
-from pprint import pprint
+import json
 
 # Why does this file exist, and why __main__?
 # For more info, read:
@@ -39,7 +39,8 @@ def main(argv=sys.argv):
         'message_body': message_body,
         'mail_parts': mail_parts
     }
-    pprint(d)
+
+    print(json.dumps(d, indent=4, sort_keys=True))
 
 
 if __name__ == "__main__":
