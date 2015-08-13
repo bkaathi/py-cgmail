@@ -25,7 +25,8 @@ def parse_message(email):
 
 
 def parse_message_body(msg):
-    # Does do we need to process text/plain and text/html separately?
+    # Do we need to process text/plain and text/html separately? 
+    # It's not clear to me that we do. 
     body = None
     if msg.get_content_type() == "text/plain":
         body = msg.get_payload(decode=True)
