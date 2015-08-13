@@ -106,6 +106,10 @@ def extract_urls(message_body, mail_parts):
 
     elif mail_parts:
         for p in mail_parts:
+            # if the mail_part is large skip the regex search
+            # 500,000 is a number pulled out of this air
+            if int(len(p['payload']) > 500000):
+                continue
             if p['payload']:
                 urls = re.findall(RE_URL_PLAIN, p['payload'])
 
