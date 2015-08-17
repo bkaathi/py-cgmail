@@ -68,6 +68,7 @@ setup(
     entry_points={
         'console_scripts': [
             'cgmail = cgmail.__main__:main',
+            'cgmail-cli = cgmail.cli.__main__:main',
         ]
     },
 )
