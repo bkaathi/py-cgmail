@@ -1,4 +1,6 @@
+# -*- encoding: utf-8 -*-
 __version__ = "0.1.0"
+
 
 from pyzmail.parse import message_from_string as pyzmail_message_from_string
 from pyzmail.parse import get_mail_parts as pyzmail_get_mail_parts
