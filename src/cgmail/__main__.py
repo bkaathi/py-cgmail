@@ -23,7 +23,8 @@ from cifsdk.observable import Observable
 LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
 REMOTE_DEFAULT = "http://localhost:5000"
 
-def print_json(message_headers,message_body,mail_parts,urls):
+
+def print_json(message_headers, message_body, mail_parts, urls):
 
     # turn set into list to serialize in json
     list_urls = list(urls)
@@ -40,7 +41,7 @@ def print_json(message_headers,message_body,mail_parts,urls):
     print(json.dumps(d, indent=4, sort_keys=True))
 
 
-def submit_to_cif(logger,options,urls):
+def submit_to_cif(logger, options, urls):
 
     # initialize cif client
     cli = Client(remote=options["remote"], token=options["token"], no_verify_ssl=options["no_verify_ssl"])
@@ -58,6 +59,7 @@ def submit_to_cif(logger,options,urls):
         )
         r = cli.submit(submit=str(o))
         logger.info("submitted: {0}".format(r))
+        
 
 def main():
 
@@ -161,14 +163,14 @@ def main():
     urls = cgmail.extract_urls(message_body, mail_parts)
 
     if args.print_stdout:
-        print_json(message_headers,message_body,mail_parts,urls)
+        print_json(message_headers, message_body, mail_parts, urls)
 
     #
     # submit urls to a CIF instance
     #
 
     if args.cif_urls:
-        submit_to_cif(logger,options,urls)
+        submit_to_cif(logger, options, urls)
 
 if __name__ == "__main__":
     main()
