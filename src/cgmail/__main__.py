@@ -9,11 +9,11 @@
 
 import sys
 import cgmail
-import json
 import logging
 import os.path
 import textwrap
 import yaml
+import json
 
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
@@ -22,24 +22,6 @@ from cifsdk.observable import Observable
 
 LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
 REMOTE_DEFAULT = "http://localhost:5000"
-
-
-def print_json(message_headers, message_body, mail_parts, urls):
-
-    # turn set into list to serialize in json
-    list_urls = list(urls)
-
-    # create dictionary of data structures
-    d = {
-        'headers': message_headers,
-        'message_body': message_body,
-        'mail_parts': mail_parts,
-        'urls': list_urls
-    }
-
-    # convert dictionary to json and print to screen
-    print(json.dumps(d, indent=4, sort_keys=True))
-
 
 def submit_to_cif(logger, options, urls):
 
@@ -59,7 +41,7 @@ def submit_to_cif(logger, options, urls):
         )
         r = cli.submit(submit=str(o))
         logger.info("submitted: {0}".format(r))
-        
+
 
 def main():
 
@@ -147,27 +129,11 @@ def main():
     else:
         email = sys.stdin.read()
 
-    #
-    # parse email message
-    #
-
-    # parse email into message and message parts
-    message, message_parts = cgmail.parse_message(email)
-
-    # get message headers, body and mail parts
-    message_body = cgmail.parse_message_body(message)
-    message_headers = cgmail.parse_message_headers(message)
-    mail_parts = cgmail.parse_message_parts(message_parts)
-
-    # extract urls from message body and mail parts
-    urls = cgmail.extract_urls(message_body, mail_parts)
+    if email:
+        email_dict = cgmail.parse_email_to_dict(email)
 
     if args.print_stdout:
-        print_json(message_headers, message_body, mail_parts, urls)
-
-    #
-    # submit urls to a CIF instance
-    #
+        print(json.dumps(email_dict, indent=4, sort_keys=True))
 
     if args.cif_urls:
         submit_to_cif(logger, options, urls)
