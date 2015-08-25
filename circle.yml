@@ -9,4 +9,4 @@ test:
 dependencies:
     pre:
        - pip install pytest
-       - sudo apt-get install libxml2-dev
+       - sudo apt-get install libxml2-dev libxslt1-dev libxml2
