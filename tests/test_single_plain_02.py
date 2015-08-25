@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*
 
 import cgmail
-from cgmail.urls import extract_urls
 
 TEST_FILE = 'samples/email/single_plain_02.eml'
 
@@ -29,6 +28,8 @@ def test_message_parts():
 def test_extract_urls():
     message_body = cgmail.parse_message_body(message)
     mail_parts = cgmail.parse_message_parts(message_parts) # returns an array of dictionaries
-    urls = extract_urls(message_body, mail_parts)
+    from pprint import pprint
+    pprint(mail_parts)
+    urls = cgmail.extract_urls(mail_parts)
     assert 'http://www.indiana.edu' in urls
 

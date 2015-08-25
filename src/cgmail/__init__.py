@@ -7,11 +7,6 @@ from pyzmail.parse import get_mail_parts as pyzmail_get_mail_parts
 from pyzmail.parse import decode_text as pyzmail_decode_text
 from cgmail.urls import extract_urls as _extract_urls
 
-try:
-    import re2 as re
-except ImportError:
-    import re
-
 RE_URL_PLAIN = r'(https?://[^\s>]+)'
 
 
@@ -93,16 +88,14 @@ def parse_message_parts(message_parts):
 
 def extract_urls(parts):
 
-    urls = set()
-
-    if type(parts) is '__str__':
-        parts = [parts]
-
+    links = set()
     for p in parts:
         html = False
-        if p['type'].startswith('plain/html'):
+        if p['type'].startswith('text/html'):
             html = True
-        l = _extract_urls(p['payload'], html=html)
-        urls.update(l)
 
-    return urls
+        l = _extract_urls(p['payload'], html=html)
+
+        links.update(l)
+
+    return links

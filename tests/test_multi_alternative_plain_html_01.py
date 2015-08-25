@@ -29,9 +29,6 @@ def test_message_parts():
 
 def test_extract_urls():
     message_body = cgmail.parse_message_body(message)
-    pprint(message)
     mail_parts = cgmail.parse_message_parts(message_parts) # returns an array of dictionaries
     urls = cgmail.extract_urls(mail_parts)
-
     assert "http://jobswalmart.xyz/customer/de/proc/" in urls
-

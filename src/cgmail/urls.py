@@ -6,9 +6,10 @@ RE_URL_PLAIN = r'(https?://[^\s>]+)'
 from pprint import pprint
 
 
-def _extract_urls_text(body):
+def _extract_urls_text(content):
     urls = set()
-    found = re.findall(RE_URL_PLAIN, body)
+
+    found = re.findall(RE_URL_PLAIN, content)
 
     for u in found:
         urls.add(u)
