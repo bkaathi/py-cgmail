@@ -3,9 +3,6 @@ from bs4 import BeautifulSoup
 
 RE_URL_PLAIN = r'(https?://[^\s>]+)'
 
-from pprint import pprint
-
-
 def _extract_urls_text(content):
     urls = set()
 

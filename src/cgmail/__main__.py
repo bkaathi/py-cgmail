@@ -9,8 +9,6 @@ import textwrap
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 
-from cgmail.urls import extract_urls
-
 from pprint import pprint
 
 LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
@@ -18,17 +16,13 @@ LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
 logger = logging.getLogger(__name__)
 
 
-def print_json(message_headers, message_body, mail_parts, urls):
-
-    # turn set into list to serialize in json
-    list_urls = list(urls)
-
+def print_json(message_headers, message_body, mail_parts):
+    
     # create dictionary of data structures
     d = {
         'headers': message_headers,
         'message_body': message_body,
         'mail_parts': mail_parts,
-        'urls': list_urls
     }
 
     # convert dictionary to json and print to screen
@@ -53,6 +47,7 @@ def main():
 
     p.add_argument('-d', '--debug', dest='debug', action="store_true")
     p.add_argument("-f", "--file", dest="file", help="specify email file")
+    p.add_argument('--urls', action='store_true')
 
     args = p.parse_args()
 
@@ -92,16 +87,12 @@ def main():
     # extract urls from message body and mail parts
     #urls = cgmail.extract_urls(message_body, mail_parts)
 
-    html = False
-    if message.get_content_type().startswith('text/html'):
-        html = True
-
-    urls = extract_urls(message_body, html=html)
-
-    pprint(urls)
-    raise SystemExit
-
-    print_json(message_headers, message_body, mail_parts, urls)
+    if options.get('urls'):
+        urls = cgmail.extract_urls(mail_parts)
+        for u in urls:
+            logger.info(u)
+    else:
+        print_json(message_headers, message_body, mail_parts)
 
 if __name__ == "__main__":
     main()
