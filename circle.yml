@@ -1,0 +1,11 @@
+machine:
+    python:
+        version: 2.7.9
+
+test:
+    override:
+        - py.test test
+
+dependencies:
+    pre:
+       -  pip install pytest
