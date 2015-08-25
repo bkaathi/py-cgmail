@@ -49,7 +49,7 @@ setup(
     install_requires=[
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
         'pyzmail==1.0.3',
-        'py-cifsdk>=0.0.3'
+        'py-cifsdk>=0.0.1'
     ],
     extras_require={
         # eg:
