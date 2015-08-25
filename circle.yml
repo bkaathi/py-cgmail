@@ -8,4 +8,5 @@ test:
 
 dependencies:
     pre:
-       -  pip install pytest
+       - pip install pytest
+       - sudo apt-get install libxml2-dev
