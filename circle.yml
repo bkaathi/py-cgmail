@@ -10,3 +10,5 @@ dependencies:
     pre:
        - pip install pytest
        - sudo apt-get install libxml2-dev libxslt1-dev libxml2
+       - pip install --upgrade lxml
+       - pip install cssselect
