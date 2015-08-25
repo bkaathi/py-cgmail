@@ -81,9 +81,6 @@ def main():
     message_headers = cgmail.parse_message_headers(message)
     mail_parts = cgmail.parse_message_parts(message_parts)
 
-    # extract urls from message body and mail parts
-    #urls = cgmail.extract_urls(message_body, mail_parts)
-
     if options.get('urls'):
         urls = cgmail.extract_urls(mail_parts)
         for u in urls:
