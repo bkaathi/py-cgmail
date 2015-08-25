@@ -21,15 +21,12 @@ def test_message_body():
 
 
 def test_message_parts():
-    mail_parts = cgmail.parse_message_parts(message_parts) # returns an array of dictionaries
+    mail_parts = cgmail.parse_message_parts(message_parts)  # returns an array of dictionaries
     assert mail_parts[0]['payload'].startswith('http://www.indiana.edu')
 
 
 def test_extract_urls():
-    message_body = cgmail.parse_message_body(message)
-    mail_parts = cgmail.parse_message_parts(message_parts) # returns an array of dictionaries
-    from pprint import pprint
-    pprint(mail_parts)
+    mail_parts = cgmail.parse_message_parts(message_parts)  # returns an array of dictionaries
     urls = cgmail.extract_urls(mail_parts)
     assert 'http://www.indiana.edu' in urls
 
