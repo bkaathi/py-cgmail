@@ -5,7 +5,7 @@ A module that leverages pyzmail to parse email messages into json and parses url
 
 ## Ubuntu
   ```bash
-  $ sudo apt-get install -y python-dev python-pip git
+  $ sudo apt-get install -y python-dev python-pip libxml2-dev libxslt1-dev libxml2
   $ pip install git+https://github.com/csirtgadgets/py-cifsdk git+https://github.com/csirtgadgets/py-cgmail
   ```
 
