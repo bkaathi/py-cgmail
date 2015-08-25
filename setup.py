@@ -25,7 +25,7 @@ def read(*names, **kwargs):
 setup(
     name='cgmail',
     version='0.1.0',
-    license='BSD',
+    license='LGPL3',
     description='"A Python library that leverages pyzmail to parse email messages into json and parses urls out of the message body"',
     long_description='%s\n%s' % (read('README.rst'), re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))),
     author='Gabriel Iovino',
@@ -37,22 +37,19 @@ setup(
     include_package_data=True,
     zip_safe=False,
     classifiers=[
-        # complete classifier list: http://pypi.python.org/pypi?%3Aaction=list_classifiers
-        'Development Status :: 5 - Production/Stable',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: BSD License',
-        'Operating System :: Unix',
-        'Operating System :: POSIX',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.4',
-        'Topic :: Utilities',
-    ],
+        "Topic :: System :: Networking",
+        "Environment :: Other Environment",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+        "Programming Language :: Python",
+        ],
     keywords=[
         # eg: 'keyword1', 'keyword2', 'keyword3',
     ],
     install_requires=[
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
+        'pyzmail==1.0.3',
+        'cifsdk>=0.0.3'
     ],
     extras_require={
         # eg:
