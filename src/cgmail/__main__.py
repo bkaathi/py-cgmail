@@ -4,12 +4,9 @@ import sys
 import cgmail
 import json
 import logging
-import os.path
 import textwrap
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
-
-from pprint import pprint
 
 LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
 
@@ -17,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 def print_json(message_headers, message_body, mail_parts):
-    
+
     # create dictionary of data structures
     d = {
         'headers': message_headers,
