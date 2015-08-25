@@ -5,19 +5,14 @@ __version__ = "0.1.0"
 from pyzmail.parse import message_from_string as pyzmail_message_from_string
 from pyzmail.parse import get_mail_parts as pyzmail_get_mail_parts
 from pyzmail.parse import decode_text as pyzmail_decode_text
+from cgmail.urls import extract_urls as _extract_urls
 
 try:
     import re2 as re
 except ImportError:
     import re
 
-# http://stackoverflow.com/questions/499345/regular-expression-to-extract-url-from-an-html-link
-# RE for URL extraction:
-# http://daringfireball.net/2010/07/improved_regex_for_matching_urls
-# http://daringfireball.net/misc/2010/07/url-matching-regex-test-data.text
-# https://gist.github.com/uogbuji/705383
-
-RE_URL_PLAIN = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+RE_URL_PLAIN = r'(https?://[^\s>]+)'
 
 
 def parse_message(email):
@@ -96,28 +91,18 @@ def parse_message_parts(message_parts):
     return mail_parts
 
 
-def extract_urls(message_body, mail_parts):
+def extract_urls(parts):
 
-    links = set()
+    urls = set()
 
-    if message_body:
-        urls = re.findall(RE_URL_PLAIN, message_body)
+    if type(parts) is '__str__':
+        parts = [parts]
 
-        for u in urls:
-            links.add(u)
+    for p in parts:
+        html = False
+        if p['type'].startswith('plain/html'):
+            html = True
+        l = _extract_urls(p['payload'], html=html)
+        urls.update(l)
 
-    elif mail_parts:
-        for p in mail_parts:
-            # if the mail_part is large skip the regex search
-            # 500,000 is a number pulled out of this air
-            if int(len(p['payload']) > 500000):
-                continue
-            if p['payload']:
-                urls = re.findall(RE_URL_PLAIN, p['payload'])
-
-                for u in urls:
-                    links.add(u)
-    else:
-        return links
-
-    return links
+    return urls
