@@ -1,14 +1,5 @@
 #!/usr/bin/env python
 
-# http://blog.magiksys.net/parsing-email-using-python-content
-# https://github.com/mailgun/flanker
-# https://pregmatch.org/read/python-procmail
-# http://stackoverflow.com/questions/557906/want-procmail-to-run-a-custom-python-script-everytime-a-new-mail-shows-up
-# http://stackoverflow.com/questions/14676375/pipe-email-from-procmail-to-python-script-that-parses-body-and-saves-as-text-fil
-# http://blog.magiksys.net/parsing-email-using-python-content
-# https://github.com/andris9/mailparser
-
-
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 import logging
@@ -23,6 +14,9 @@ from cifsdk.observable import Observable
 
 LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
 REMOTE_DEFAULT = "http://localhost:5000"
+CONFIDENCE = 50
+TLP = 'green'
+PROVIDER = 'localhost'
 
 
 def main():
@@ -34,11 +28,11 @@ def main():
     p = ArgumentParser(
         description=textwrap.dedent('''\
         example usage:
-            $ cat test.eml | cif-procmail -v
-            $ cif-procmail --file test.eml
+            $ cat test.eml | cgmail-cif -v
+            $ cgmail-cif --file test.eml
         '''),
         formatter_class=RawDescriptionHelpFormatter,
-        prog='cif-procmail'
+        prog='cgmail-cif'
     )
 
     p.add_argument("-v", "--verbose", dest="verbose", action="count",
@@ -48,7 +42,7 @@ def main():
     p.add_argument("-f", "--file", dest="file", help="specify email file")
 
     # cif arguments
-    p.add_argument("--confidence", help="specify confidence for submitting to CIF", default="65")
+    p.add_argument("--confidence", help="specify confidence for submitting to CIF", default=CONFIDENCE)
     p.add_argument("--remote", help="specify CIF remote [default: %(default)s",
                    default=REMOTE_DEFAULT)
     p.add_argument("--token", help="specify CIF token")
@@ -56,11 +50,10 @@ def main():
                    default=os.path.expanduser("~/.cif.yml"))
     p.add_argument("--tags", help="specify CIF tags [default: %(default)s", default=["phishing"])
     p.add_argument("--group", help="specify CIF group [default: %(default)s", default="everyone")
-    p.add_argument("--tlp", help="specify CIF TLP [default: %(default)s", default="amber")
+    p.add_argument("--tlp", help="specify CIF TLP [default: %(default)s", default=TLP)
     p.add_argument("--no-verify-ssl", action="store_true", default=False)
-    p.add_argument("--raw", help="include raw message data")
-    p.add_argument("--raw-headers", help="include raw header data", action="store_true")
-    p.add_argument("--provider", help="specify feed provider [default: %(default)s", default="localhost")
+    p.add_argument("--raw", action="store_true", help="include raw message data")
+    p.add_argument("--provider", help="specify feed provider [default: %(default)s]", default=PROVIDER)
 
     args = p.parse_args()
 
@@ -121,7 +114,7 @@ def main():
     mail_parts = cgmail.parse_message_parts(message_parts)
 
     # extract urls from message body and mail parts
-    urls = cgmail.extract_urls(message_body, mail_parts)
+    urls = cgmail.extract_urls(mail_parts)
 
     #
     # submit urls to a CIF instance
@@ -139,9 +132,13 @@ def main():
             tlp=options["tlp"],
             group=options["group"],
             tags=options["tags"],
-            provider=options["provider"]
+            provider=options.get('provider')
         )
-        r = cli.submit(submit=str(o))
+
+        if options.get('raw'):
+            o.raw = email
+
+        r = cli.submit(str(o))
         logger.info("submitted: {0}".format(r))
 
 

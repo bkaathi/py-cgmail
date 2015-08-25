@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*
 
 import cgmail
-from pprint import pprint
 
-file = 'samples/email/multi_mixed_html_application_octet-stream_01.eml'
+TEST_FILE = 'samples/email/multi_mixed_html_application_octet-stream_01.eml'
 
-with open(file) as f:
+with open(TEST_FILE) as f:
     email = f.read()
 
 message, message_parts = cgmail.parse_message(email)
@@ -18,7 +17,7 @@ def test_message_headers():
 
 def test_message_body():
     message_body = cgmail.parse_message_body(message)
-    assert message_body == None
+    assert message_body is None
 
 
 def test_message_parts():
