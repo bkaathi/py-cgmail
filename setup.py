@@ -27,7 +27,7 @@ setup(
     version='0.1.0',
     license='LGPL3',
     description='"A Python library that leverages pyzmail to parse email messages into json and parses urls out of the message body"',
-    long_description='%s\n%s' % (read('README.rst'), re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))),
+    long_description='%s\n%s' % (read('README.md'), re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))),
     author='Gabriel Iovino',
     author_email='giovino@gmail.com',
     url='https://github.com/csirtgadgets/py-cgmail',
