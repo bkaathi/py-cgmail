@@ -2,9 +2,10 @@
 
 import sys
 import cgmail
-import json
 import logging
 import textwrap
+import json
+
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 
@@ -24,7 +25,7 @@ def print_json(message_headers, message_body, mail_parts):
 
     # convert dictionary to json and print to screen
     logger.info(json.dumps(d, indent=4, sort_keys=True))
-        
+
 
 def main():
 

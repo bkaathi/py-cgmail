@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
 __version__ = "0.1.0"
 
-
 from pyzmail.parse import message_from_string as pyzmail_message_from_string
 from pyzmail.parse import get_mail_parts as pyzmail_get_mail_parts
 from pyzmail.parse import decode_text as pyzmail_decode_text
@@ -99,3 +98,26 @@ def extract_urls(parts):
         links.update(l)
 
     return links
+
+def parse_email_to_dict(email):
+
+    # parse email into message and message parts
+    message, message_parts = parse_message(email)
+
+    # get message headers, body and mail parts
+    message_body = parse_message_body(message)
+    message_headers = parse_message_headers(message)
+    mail_parts = parse_message_parts(message_parts)
+
+    # extract urls from message body and mail parts
+    urls = list(extract_urls(message_body, mail_parts))
+
+    # create dictionary of data structures
+    d = {
+        'headers': message_headers,
+        'message_body': message_body,
+        'mail_parts': mail_parts,
+        'urls': urls
+    }
+
+    return d
