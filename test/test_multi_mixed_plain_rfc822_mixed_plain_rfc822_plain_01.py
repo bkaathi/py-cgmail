@@ -15,20 +15,13 @@ def test_message_headers():
     assert message_headers['return-path'][0] == '<john@csirtgadgets.org>'
 
 
-def test_message_body():
-    message_body = cgmail.parse_message_body(message)
-    assert message_body is None
-
-
 def test_message_parts():
     mail_parts = cgmail.parse_message_parts(message_parts) # returns an array of dictionaries
-    assert mail_parts[0]['payload'].startswith('forward attachment of attachment')
-    assert mail_parts[1]['payload'].index('give me your credentials')
-
+    assert mail_parts[0]['decoded_body'].startswith('forward attachment')
+    assert mail_parts[1]['type'].startswith('message/rfc822')
 
 def test_extract_urls():
-    message_body = cgmail.parse_message_body(message)
     mail_parts = cgmail.parse_message_parts(message_parts) # returns an array of dictionaries
-    urls = cgmail.extract_urls(mail_parts)
-    assert 'http://www.example.com' in urls
+    urls = cgmail.extract_urls(mail_parts) # returns a set
+    assert "http://www.example.com" in urls
 
