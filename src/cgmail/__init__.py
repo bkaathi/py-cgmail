@@ -6,9 +6,6 @@ from pyzmail.parse import get_mail_parts as pyzmail_get_mail_parts
 from pyzmail.parse import decode_text as pyzmail_decode_text
 from cgmail.urls import extract_urls as _extract_urls
 
-# remove when done testing
-from pprint import pprint
-
 RE_URL_PLAIN = r'(https?://[^\s>]+)'
 
 
@@ -56,6 +53,7 @@ def get_decoded_body(p, d):
 
     return d
 
+
 def get_attachments(message):
    
     results = []
@@ -80,13 +78,13 @@ def process_part_type(p, d):
     if p.type == "text/plain" or p.type == "text/html":
         d = get_decoded_body(p, d)
     elif p.type == "application/octet-stream":
-        #need to process attached files here (e.g. .html)
+        # process attached files here (e.g. .html)
         pass
     elif p.type == "application/zip":
-        # need to extract zip files here
+        # extract zip files
         pass
     elif p.type == "application/pdf":
-        # process pdf's
+        # extract pdf's
         pass
     return d
 
@@ -113,42 +111,42 @@ def parse_message_parts(message_parts):
     return mail_parts
 
 
-def extract_urls(mail_parts):
-    
+def extract_urls(email):
+
     links = set()
-    
-    for p in mail_parts:
-        html = False
 
-        if p['is_body']:
-            if p['is_body'].startswith('text/html'):
-                html = True
-                l = _extract_urls(p['decoded_body'], html=html)
-                links.update(l)
-        
-            if p['is_body'].startswith('text/plain'):
-                l = _extract_urls(p['decoded_body'], html=html)
-                links.update(l)
+    results = parse_email_from_string(email)
 
+    for result in results:
+        for mail_part in result['mail_parts']:
+            if mail_part['is_body']:
+                if mail_part['is_body'].startswith('text/html'):
+                    l = _extract_urls(mail_part['decoded_body'], html=True)
+                    links.update(l)
+                if mail_part['is_body'].startswith('text/plain'):
+                    l = _extract_urls(mail_part['decoded_body'], html=False)
+                    links.update(l)
     return links
 
-def flatten(S):
-    if S == []:
-        return S
-    if isinstance(S[0], list):
-        return flatten(s[0]) + flatten(S[1:])
-    return S[:1] + flatten(S[1:])
+
+def flatten(s):
+    if s == []:
+        return s
+    if isinstance(s[0], list):
+        return flatten(s[0]) + flatten(s[1:])
+    return s[:1] + flatten(s[1:])
+
 
 def parse_attached_emails(attachments):
     flattened = []
     for a in attachments:
         if a['type'] == "message/rfc822":
-            d = parse_email_to_dict(a['attachment'])
+            d = parse_email_from_string(a['attachment'])
             flattened = flatten(d)
     return flattened
  
 
-def parse_email_to_dict(email):
+def parse_email_from_string(email):
 
     results = []
 
@@ -164,34 +162,18 @@ def parse_email_to_dict(email):
     # get attachments
     attachments = get_attachments(message)
 
-    # get attached emails
+    # find encapsulated emails in attachments
     attached_emails = parse_attached_emails(attachments)
-    for email in attached_emails:
-        results.append(email)
-
-    '''
-    # testing
-    if attachments:
-        for a in attachments:
-            if a['type'] == "message/rfc822":
-                d = parse_email_to_dict(a['attachment'])
-                
-                flattened = flatten(d)
-                for f in flattened:
-                    results.append(f)
-    '''            
-    # extract urls from message body and mail parts
-    urls = extract_urls(mail_parts)
+    for attached_email in attached_emails:
+        results.append(attached_email)
 
     # create dictionary of data structures
     d = {
         'headers': message_headers,
         'mail_parts': mail_parts,
         'attachments': attachments,
-        'urls': urls,
     }
 
     results.append(d)
 
     return results
-

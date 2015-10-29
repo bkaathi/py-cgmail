@@ -14,17 +14,10 @@ LOG_FORMAT = '%(asctime)s - %(levelname)s - %(name)s[%(lineno)s] - %(message)s'
 logger = logging.getLogger(__name__)
 
 
-def print_json(message_headers, message_body, mail_parts):
-
-    # create dictionary of data structures
-    d = {
-        'headers': message_headers,
-        'message_body': message_body,
-        'mail_parts': mail_parts,
-    }
+def print_json(results):
 
     # convert dictionary to json and print to screen
-    logger.info(json.dumps(d, indent=4, sort_keys=True))
+    logger.info(json.dumps(results, indent=4, sort_keys=True))
 
 
 def main():
@@ -74,20 +67,17 @@ def main():
     # parse email message
     #
 
-    # parse email into message and message parts
-    message, message_parts = cgmail.parse_message(email)
-
-    # get message headers, body and mail parts
-    message_body = cgmail.parse_message_body(message)
-    message_headers = cgmail.parse_message_headers(message)
-    mail_parts = cgmail.parse_message_parts(message_parts)
+    results = cgmail.parse_email_from_string(email) 
 
     if options.get('urls'):
-        urls = cgmail.extract_urls(mail_parts)
-        for u in urls:
-            logger.info(u)
+        u = cgmail.extract_urls(email)
+        urls = {
+            'urls': list(u)
+        }
+        results.append(urls)
+        print_json(results)
     else:
-        print_json(message_headers, message_body, mail_parts)
+        print_json(results)
 
 if __name__ == "__main__":
     main()

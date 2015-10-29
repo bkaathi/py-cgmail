@@ -102,19 +102,8 @@ def main():
     else:
         email = sys.stdin.read()
 
-    #
-    # parse email message
-    #
-
-    # parse email into message and message parts
-    message, message_parts = cgmail.parse_message(email)
-
-    # get message body from message & mail parts from message parts
-    message_body = cgmail.parse_message_body(message)
-    mail_parts = cgmail.parse_message_parts(message_parts)
-
     # extract urls from message body and mail parts
-    urls = cgmail.extract_urls(mail_parts)
+    urls = cgmail.extract_urls(email)
 
     #
     # submit urls to a CIF instance
