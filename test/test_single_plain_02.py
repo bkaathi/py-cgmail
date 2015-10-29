@@ -16,6 +16,5 @@ def test_message_parts():
     assert results[0]['mail_parts'][0]['decoded_body'].startswith('http://www.indiana.edu')
 
 def test_extract_urls():
-    urls = cgmail.extract_urls(email)
-    assert "http://www.indiana.edu" in urls
+    assert "http://www.indiana.edu" in results[0]['urls']
 

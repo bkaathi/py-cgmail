@@ -111,21 +111,20 @@ def parse_message_parts(message_parts):
     return mail_parts
 
 
-def extract_urls(email):
+def extract_urls(mail_parts):
 
     links = set()
 
-    results = parse_email_from_string(email)
+    #results = parse_email_from_string(email)
 
-    for result in results:
-        for mail_part in result['mail_parts']:
-            if mail_part['is_body']:
-                if mail_part['is_body'].startswith('text/html'):
-                    l = _extract_urls(mail_part['decoded_body'], html=True)
-                    links.update(l)
-                if mail_part['is_body'].startswith('text/plain'):
-                    l = _extract_urls(mail_part['decoded_body'], html=False)
-                    links.update(l)
+    for mail_part in mail_parts:
+        if mail_part['is_body']:
+            if mail_part['is_body'].startswith('text/html'):
+                l = _extract_urls(mail_part['decoded_body'], html=True)
+                links.update(l)
+            if mail_part['is_body'].startswith('text/plain'):
+                l = _extract_urls(mail_part['decoded_body'], html=False)
+                links.update(l)
     return links
 
 
@@ -150,29 +149,27 @@ def parse_email_from_string(email):
 
     results = []
 
+    d = {}
+
     # parse email into message and message parts
     message, message_parts = parse_message(email)
 
     # get message headers
-    message_headers = parse_message_headers(message)
+    d['headers'] = message_headers = parse_message_headers(message)
 
     # get mail parts
-    mail_parts = parse_message_parts(message_parts)
+    d['mail_parts'] = mail_parts = parse_message_parts(message_parts)
 
     # get attachments
-    attachments = get_attachments(message)
+    d['attachments'] = attachments = get_attachments(message)
+
+    # get urls
+    d['urls'] = urls = extract_urls(mail_parts)
 
     # find encapsulated emails in attachments
     attached_emails = parse_attached_emails(attachments)
     for attached_email in attached_emails:
         results.append(attached_email)
-
-    # create dictionary of data structures
-    d = {
-        'headers': message_headers,
-        'mail_parts': mail_parts,
-        'attachments': attachments,
-    }
 
     results.append(d)
 

@@ -18,6 +18,5 @@ def test_message_parts():
     assert results[0]['mail_parts'][0]['decoded_body'].startswith('<HTML>\n<div id=":219" class="zz J-J5-Ji">')
 
 def test_extract_urls():
-    urls = cgmail.extract_urls(email)
-    assert "http://www.homerunsports.com/sites/all/themes/zen/zen-internals/css/direct/index.php?cmd=_login-processing&login_cmd=_login-done&login_access=852105208512140" in urls
+    assert "http://www.homerunsports.com/sites/all/themes/zen/zen-internals/css/direct/index.php?cmd=_login-processing&login_cmd=_login-done&login_access=852105208512140" in results[0]['urls']
 

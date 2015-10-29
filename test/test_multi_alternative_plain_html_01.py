@@ -18,6 +18,5 @@ def test_message_parts():
     assert results[0]['mail_parts'][1]['decoded_body'].startswith('<!DOCTYPE HTML PUBLIC')
 
 def test_extract_urls():
-    urls = cgmail.extract_urls(email)
-    assert "http://jobswalmart.xyz/customer/de/proc/" in urls
+    assert "http://jobswalmart.xyz/customer/de/proc/" in results[0]['urls']
 

@@ -24,6 +24,5 @@ def test_attachments():
     assert results[2]['attachments'][0]['attachment'].startswith('From nobody')
 
 def test_extract_urls():
-    urls = cgmail.extract_urls(email)
-    assert "http://www.example.com" in urls
+    assert "http://www.example.com" in results[0]['urls']
 

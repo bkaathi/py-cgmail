@@ -17,7 +17,6 @@ def test_message_parts():
     assert results[0]['mail_parts'][1]['decoded_body'].startswith('<!DOCTYPE html')
 
 def test_extract_urls():
-    urls = cgmail.extract_urls(email)
-    assert 'http://geos.info/wp-content/uploads/scotiaonline/SignontoScotiaOnLine.htm' in urls
-    assert 'https://www1.scotiaonline.scotiabank.com/online/authentication/authentication.bns' in urls
+    assert 'http://geos.info/wp-content/uploads/scotiaonline/SignontoScotiaOnLine.htm' in results[0]['urls']
+    assert 'https://www1.scotiaonline.scotiabank.com/online/authentication/authentication.bns' in results[0]['urls']
 

@@ -16,6 +16,5 @@ def test_message_parts():
     assert results[0]['mail_parts'][0]['decoded_body'].startswith('<meta http-equiv=')
 
 def test_extract_urls():
-    urls = cgmail.extract_urls(email)
-    assert "http://confirmyouraccountnow.jimdo.com" in urls
+    assert "http://confirmyouraccountnow.jimdo.com" in results[0]['urls']
 

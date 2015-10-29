@@ -18,6 +18,5 @@ def test_message_parts():
     assert results[0]['mail_parts'][0]['decoded_body'].startswith('Hello')
 
 def test_extract_urls():
-    urls = cgmail.extract_urls(email)
-    assert "http://www.socialservices.cn/detail.php?id=9" in urls
+    assert "http://www.socialservices.cn/detail.php?id=9" in results[0]['urls']
 
