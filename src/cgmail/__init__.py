@@ -121,7 +121,7 @@ def extract_urls(mail_parts):
             if mail_part['is_body'].startswith('text/plain'):
                 l = _extract_urls(mail_part['decoded_body'], html=False)
                 links.update(l)
-    return list(links)
+    return links
 
 
 def flatten(s):
