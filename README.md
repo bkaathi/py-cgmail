@@ -28,6 +28,10 @@ $ cgmail-cif -h
 }
 ```
 
+## Sample Data Structure
+
+See [this wiki page](https://github.com/csirtgadgets/py-cgmail/wiki/cgmail-sample-output).
+
 # Support and Documentation
 
 You can also look for information at the [GitHub repo](https://github.com/csirtgadgets/py-cgmail).
