@@ -29,7 +29,7 @@ def main():
     p = ArgumentParser(
         description=textwrap.dedent('''\
         example usage:
-            $ cat test.eml | cgmail -v
+            $ cat test.eml | cgmail -d
             $ cgmail --file test.eml
         '''),
         formatter_class=RawDescriptionHelpFormatter,
