@@ -1,6 +1,7 @@
 # -*- encoding: utf-8 -*-
 __version__ = "0.1.1"
 
+import base64
 from pyzmail.parse import message_from_string as pyzmail_message_from_string
 from pyzmail.parse import get_mail_parts as pyzmail_get_mail_parts
 from pyzmail.parse import decode_text as pyzmail_decode_text
@@ -77,15 +78,9 @@ def process_part_type(p, d):
 
     if p.type == "text/plain" or p.type == "text/html":
         d = get_decoded_body(p, d)
-    elif p.type == "application/octet-stream":
-        # process attached files here (e.g. .html)
-        pass
-    elif p.type == "application/zip":
-        # extract zip files
-        pass
-    elif p.type == "application/pdf":
-        # extract pdf's
-        pass
+    elif p.type.startswith('application'):
+        d['base64_encoded_payload'] = base64.b64encode(p.get_payload())
+    
     return d
 
 
@@ -102,6 +97,7 @@ def parse_message_parts(message_parts):
             'sanitized_filename': p.sanitized_filename,
             'type': p.type,
             'decoded_body': None,
+            'base64_encoded_payload': None,
         }
 
         d = process_part_type(p, d)
