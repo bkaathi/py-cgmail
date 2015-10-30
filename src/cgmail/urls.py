@@ -76,6 +76,6 @@ def extract_urls(content, html=False):
         else:
             urls = _extract_urls_text(content)
     else:
-        raise RuntimeError('no content to extract urls from')
+        return urls
 
     return urls
