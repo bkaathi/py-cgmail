@@ -10,6 +10,41 @@ RE_IPV6 = re.compile('(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4
 # http://goo.gl/Cztyn2 -- probably needs more work
 RE_FQDN = re.compile('^((xn--)?(--)?[a-zA-Z0-9-_]+(-[a-zA-Z0-9]+)*\.)+[a-zA-Z]{2,}(--p1ai)?$')
 RE_URI_SCHEMES = re.compile('^(https?|ftp)$')
+RE_EMAIL_ADDRESS = re.compile('([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)')
+
+def _extract_email_addresses_text(content):
+    email_addresses = set()
+
+    found = re.findall(RE_EMAIL_ADDRESS, content)
+
+    for address in found:
+        email_addresses.add(address)
+
+    return email_addresses
+
+
+def _extract_email_addresses_html(content):
+    email_addresses = set()
+
+    soup = BeautifulSoup(content, "lxml")
+
+    email_addresses = re.findall(RE_EMAIL_ADDRESS, soup.get_text())
+
+    return email_addresses
+
+
+def extract_email_addresses(content, html=False):
+    email_addresses = set()
+
+    if content:
+        if html:
+            email_addresses = _extract_email_addresses_html(content)
+        else:
+            email_addresses = _extract_email_addresses_text(content)
+    else:
+        return email_addresses
+
+    return email_addresses
 
 
 def _url(s):
