@@ -6,6 +6,7 @@ from pyzmail.parse import message_from_string as pyzmail_message_from_string
 from pyzmail.parse import get_mail_parts as pyzmail_get_mail_parts
 from pyzmail.parse import decode_text as pyzmail_decode_text
 from cgmail.urls import extract_urls as _extract_urls
+from cgmail.urls import extract_email_addresses as _extract_email_addresses
 
 RE_URL_PLAIN = r'(https?://[^\s>]+)'
 
@@ -123,6 +124,20 @@ def extract_urls(mail_parts):
                 links.update(l)
     return links
 
+def extract_email_addresses(mail_parts):
+
+    email_addresses = set()
+
+    for mail_part in mail_parts:
+        if mail_part['is_body']:
+            if mail_part['is_body'].startswith('text/html'):
+                email_address = _extract_email_addresses(mail_part['decoded_body'], html=True)
+                email_addresses.update(email_address)
+            if mail_part['is_body'].startswith('text/plain'):
+                email_address = _extract_email_addresses(mail_part['decoded_body'], html=False)
+                email_addresses.update(email_address)
+
+    return email_addresses
 
 def flatten(s):
     if s == []:
@@ -159,8 +174,11 @@ def parse_email_from_string(email):
     # get attachments
     d['attachments'] = attachments = get_attachments(message)
 
-    # get urls
+    # get urls from message body
     d['urls'] = urls = extract_urls(mail_parts)
+
+    # get email addresses from message body
+    d['body_email_addresses'] = email_addresses = extract_email_addresses(mail_parts)
 
     # find encapsulated emails in attachments
     attached_emails = parse_attached_emails(attachments)
