@@ -9,7 +9,7 @@ A module that leverages pyzmail to parse email messages into json and parses url
   $ pip install --upgrade pip
   $ pip install --upgrade lxml
   $ pip install cssselect
-  $ pip install git+https://github.com/csirtgadgets/py-cgmail
+  $ pip install https://github.com/csirtgadgets/py-cgmail/archive/master.tar.gz
   ```
 
 # Examples
