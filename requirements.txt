@@ -1,4 +1,3 @@
 pyzmail==1.0.3
-py-cifsdk>=0.0.1
 pyyaml
 beautifulsoup4==4.4.0
