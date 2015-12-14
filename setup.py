@@ -59,7 +59,6 @@ setup(
     entry_points={
         'console_scripts': [
             'cgmail = cgmail.__main__:main',
-            'cgmail-cif = cgmail.cif:main'
         ]
     },
     test_suite="test"

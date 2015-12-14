@@ -28,11 +28,11 @@ def main():
     p = ArgumentParser(
         description=textwrap.dedent('''\
         example usage:
-            $ cat test.eml | cgmail-cif -v
-            $ cgmail-cif --file test.eml
+            $ cat test.eml | cgmail
+            $ cgmail --file test.eml
         '''),
         formatter_class=RawDescriptionHelpFormatter,
-        prog='cgmail-cif'
+        prog='cgmail'
     )
 
     p.add_argument("-v", "--verbose", dest="verbose", action="count",

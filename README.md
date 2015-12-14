@@ -16,17 +16,6 @@ A module that leverages pyzmail to parse email messages into json and parses url
 ## Commandline
 ```
 $ cgmail -h
-$ cgmail-cif -h
-```
-
-## Procmail
-```
-:0
-* ^X-Original-To: phish@csirtgadgets.org
-{
-    :0
-    | /home/wes/.virtualenvs/cgmail/bin/cgmail-cif --no-verify-ssl -d --provider cif.localhost >> cif
-}
 ```
 
 ## Sample Data Structure
