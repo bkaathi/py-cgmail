@@ -1,5 +1,5 @@
 # py-cgmail
-A module that leverages pyzmail to parse email messages into json and parses urls out of the message body
+A module that leverages pyzmail to parse email messages into json and parses urls and email addresses out of the message body
 
 # Installation
 
