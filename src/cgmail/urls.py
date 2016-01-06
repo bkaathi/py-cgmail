@@ -28,7 +28,7 @@ def _extract_email_addresses_html(content):
 
     soup = BeautifulSoup(content, "lxml")
 
-    email_addresses = re.findall(RE_EMAIL_ADDRESS, soup.get_text())
+    email_addresses = re.findall(RE_EMAIL_ADDRESS, soup.get_text(separator=' '))
 
     return email_addresses
 
