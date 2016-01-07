@@ -19,14 +19,13 @@ def parse_message(email):
 
 
 def parse_message_headers(msg):
+
+    keys = msg.keys()
+    values = msg.values()
     msg_headers = {}
-    for header in msg.keys():
-        header = header.lower()
-        value = msg.get_decoded_header(header)
-        try:
-            msg_headers[header].append(value)
-        except KeyError:
-            msg_headers[header] = [value]
+
+    for k, v in zip(keys, values):
+        msg_headers.setdefault(k.lower(), []).append(v)
 
     return msg_headers
 
