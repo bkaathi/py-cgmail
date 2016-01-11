@@ -97,7 +97,7 @@ def _extract_urls_html(body):
     for link in soup.find_all('a'):
         if link.get('href'):
             if _url(link.get('href')):
-                urls.add(str(link.get('href')))
+                urls.add(link.get('href'))
 
     return urls
 
