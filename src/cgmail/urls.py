@@ -1,7 +1,10 @@
 import re
 import socket
 from bs4 import BeautifulSoup
-from urlparse import urlparse
+try:
+    from urlparse import urlparse
+except ImportError:
+    from urllib.parse import urlparse
 
 RE_URL_PLAIN = r'(https?://[^\s>]+)'
 RE_IPV4 = re.compile('^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}')
