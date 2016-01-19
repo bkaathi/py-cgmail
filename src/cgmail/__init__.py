@@ -2,6 +2,8 @@
 __version__ = "0.1.1"
 
 import base64
+import sys
+import chardet
 from pyzmail.parse import message_from_string as pyzmail_message_from_string
 from pyzmail.parse import get_mail_parts as pyzmail_get_mail_parts
 from pyzmail.parse import decode_text as pyzmail_decode_text
@@ -10,6 +12,42 @@ from cgmail.urls import extract_email_addresses as _extract_email_addresses
 
 RE_URL_PLAIN = r'(https?://[^\s>]+)'
 
+IS_PY2 = sys.version_info < (3, 0)
+if not IS_PY2:
+    # Helper for Python 2 and 3 compatibility
+    unicode = str
+
+def make_compat_str(in_str):
+    """
+    Tries to guess encoding of [str/bytes] and decode it into
+    an unicode object.
+    """
+    assert isinstance(in_str, (bytes, str, unicode))
+    if not in_str:
+        return unicode()
+
+    # Chardet in Py2 works on str + bytes objects
+    if IS_PY2 and isinstance(in_str, unicode):
+        return in_str
+
+    # Chardet in Py3 works on bytes objects
+    if not IS_PY2 and not isinstance(in_str, bytes):
+        return in_str
+
+    # Detect the encoding now
+    enc = chardet.detect(in_str)
+
+    # Decode the object into a unicode object
+    out_str = in_str.decode(enc['encoding'])
+
+    # Cleanup: Sometimes UTF-16 strings include the BOM
+    if enc['encoding'] == "UTF-16BE":
+        # Remove byte order marks (BOM)
+        if out_str.startswith('\ufeff'):
+            out_str = out_str[1:]
+
+    # Return the decoded string
+    return out_str
 
 def parse_message(email):
     message = pyzmail_message_from_string(email)
@@ -34,19 +72,11 @@ def decode_text(p, d):
 
     if p.charset:
         try:
-            d['decoded_body'] = p.get_payload().decode(p.charset)
-        except (UnicodeDecodeError, LookupError):
-            _decoded_body = pyzmail_decode_text(p.get_payload(), None, None)
-            d['decoded_body'] = _decoded_body[0]
+            d['decoded_body'] = p.get_payload().decode(p.charset).encode('ascii', 'replace')
+        except (UnicodeDecodeError, LookupError): 
+            d['decoded_body'] = make_compat_str(p.get_payload()).encode('ascii', 'replace')
     else:
-        _decoded_body = pyzmail_decode_text(p.get_payload(), None, None)
-        d['decoded_body'] = _decoded_body[0]
-
-    # decoding failed, return the un-encoded string
-    # yes this is returning it with a key titled "decoded_body"
-    # it needs to be fixed
-    if isinstance(d['decoded_body'], unicode):
-        d['decoded_body'] = p.get_payload()
+        d['decoded_body'] = make_compat_str(p.get_payload()).encode('ascii', 'replace')
 
     return d
 

@@ -14,7 +14,7 @@ def test_message_headers():
     assert results[0]['headers']['return-path'][0] == '<suppbaby@example.com>'
 
 def test_message_parts():
-    assert results[0]['mail_parts'][0]['decoded_body'].startswith("Dear O\xc3\xb9")
+    assert results[0]['mail_parts'][0]['decoded_body'].startswith("Dear O?? Acheter")
 
 def test_extract_urls():
     urls = list(results[0]['urls'])

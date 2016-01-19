@@ -1,3 +1,4 @@
 pyzmail==1.0.3
 pyyaml
 beautifulsoup4==4.4.0
+chardet
