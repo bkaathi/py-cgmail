@@ -72,11 +72,14 @@ def decode_text(p, d):
 
     if p.charset:
         try:
-            d['decoded_body'] = p.get_payload().decode(p.charset).encode('ascii', 'replace')
+            #d['decoded_body'] = p.get_payload().decode(p.charset).encode('ascii', 'replace')
+            d['decoded_body'] = p.get_payload().decode(p.charset)
         except (UnicodeDecodeError, LookupError): 
-            d['decoded_body'] = make_compat_str(p.get_payload()).encode('ascii', 'replace')
+            #d['decoded_body'] = make_compat_str(p.get_payload()).encode('ascii', 'replace')
+            d['decoded_body'] = make_compat_str(p.get_payload())
     else:
-        d['decoded_body'] = make_compat_str(p.get_payload()).encode('ascii', 'replace')
+        #d['decoded_body'] = make_compat_str(p.get_payload()).encode('ascii', 'replace')
+        d['decoded_body'] = make_compat_str(p.get_payload())
 
     return d
 

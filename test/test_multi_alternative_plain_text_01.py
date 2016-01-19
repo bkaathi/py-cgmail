@@ -14,7 +14,8 @@ def test_message_headers():
     assert results[0]['headers']['return-path'][0] == '<suppbaby@example.com>'
 
 def test_message_parts():
-    assert results[0]['mail_parts'][0]['decoded_body'].startswith("Dear O?? Acheter")
+    ascii_encoded_body = results[0]['mail_parts'][0]['decoded_body'].encode('ascii', 'xmlcharrefreplace')
+    assert ascii_encoded_body.startswith("Dear O&#195;&#185")
 
 def test_extract_urls():
     urls = list(results[0]['urls'])
