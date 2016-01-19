@@ -42,6 +42,12 @@ def decode_text(p, d):
         _decoded_body = pyzmail_decode_text(p.get_payload(), None, None)
         d['decoded_body'] = _decoded_body[0]
 
+    # decoding failed, return the un-encoded string
+    # yes this is returning it with a key titled "decoded_body"
+    # it needs to be fixed
+    if isinstance(d['decoded_body'], unicode):
+        d['decoded_body'] = p.get_payload()
+
     return d
 
     

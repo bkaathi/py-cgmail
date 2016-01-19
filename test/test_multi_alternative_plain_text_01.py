@@ -14,10 +14,8 @@ def test_message_headers():
     assert results[0]['headers']['return-path'][0] == '<suppbaby@example.com>'
 
 def test_message_parts():
-    ascii_encoded_body = results[0]['mail_parts'][0]['decoded_body'].encode('ascii', 'ignore')
-    assert ascii_encoded_body.startswith('Dear O Acheter Warfarin')
+    assert results[0]['mail_parts'][0]['decoded_body'].startswith("Dear O\xc3\xb9")
 
 def test_extract_urls():
     urls = list(results[0]['urls'])
-    ascii_encoded_url = urls[1].encode('ascii', 'ignore')
-    assert 'https://vk.com/away.php?to=http://mediasheet.ru/361389/tadalis-anfordring-levering-tadalafil-generisk-billige"' == ascii_encoded_url
+    assert 'http://www.geldfa.de/3957/generic-ranitidine-online-pharmacy-canadian-zantac-compresse' == urls[0]
