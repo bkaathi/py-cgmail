@@ -17,9 +17,6 @@ def test_message_parts():
     assert results[0]['mail_parts'][0]['decoded_body'].startswith('give me your credentials')
     assert results[1]['mail_parts'][0]['decoded_body'].startswith('phishing message attached')
 
-def test_attachments():
-    assert results[1]['attachments'][0]['attachment'].startswith('From nobody')
-
 def test_extract_urls():
     assert "http://www.example.com" in results[0]['urls']
 

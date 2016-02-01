@@ -94,7 +94,7 @@ def get_decoded_body(p, d):
     return d
 
 
-def get_attachments(message):
+def get_messages_as_attachments(message):
    
     results = []
 
@@ -210,7 +210,7 @@ def parse_email_from_string(email):
     d['mail_parts'] = mail_parts = parse_message_parts(message_parts)
 
     # get attachments
-    d['attachments'] = attachments = get_attachments(message)
+    attachments = get_messages_as_attachments(message)
 
     # get urls from message body
     d['urls'] = urls = extract_urls(mail_parts)
