@@ -49,6 +49,7 @@ def make_compat_str(in_str):
     # Return the decoded string
     return out_str
 
+
 def parse_message(email):
     message = pyzmail_message_from_string(email)
     parts = pyzmail_get_mail_parts(message)
@@ -115,10 +116,20 @@ def get_messages_as_attachments(message):
 
 def process_part_type(p, d):
 
-    if p.type == "text/plain" or p.type == "text/html":
-        d = get_decoded_body(p, d)
-    elif p.type.startswith('application'):
-        d['base64_encoded_payload'] = base64.b64encode(p.get_payload())
+    if p.is_body:
+        if p.type == 'text/plain' or p.type == 'text/html' and p.disposition is None:
+            d = get_decoded_body(p, d)
+        elif p.type == 'text/plain' or p.type == 'text/html' and p.disposition == 'inline':
+            d = get_decoded_body(p, d)
+        elif p.type.startswith('application'):
+            d['base64_encoded_payload'] = base64.b64encode(p.get_payload())
+        elif p.type.startswith('image'):
+            d['base64_encoded_payload'] = base64.b64encode(p.get_payload())
+    else:
+        if p.type.startswith('application'):
+            d['base64_encoded_payload'] = base64.b64encode(p.get_payload())
+        elif p.disposition == 'attachment':
+            d['base64_encoded_payload'] = base64.b64encode(p.get_payload())
     
     return d
 
