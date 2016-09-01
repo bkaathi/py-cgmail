@@ -19,4 +19,3 @@ def test_message_parts():
 def test_extract_urls():
     assert 'http://geos.info/wp-content/uploads/scotiaonline/SignontoScotiaOnLine.htm' in results[0]['urls']
     assert 'https://www1.scotiaonline.scotiabank.com/online/authentication/authentication.bns' in results[0]['urls']
-

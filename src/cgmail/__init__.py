@@ -6,6 +6,7 @@ import sys
 import chardet
 from pyzmail.parse import message_from_string as pyzmail_message_from_string
 from pyzmail.parse import get_mail_parts as pyzmail_get_mail_parts
+from pyzmail.parse import decode_mail_header as pyzmail_decode_mail_header
 from pyzmail.parse import decode_text as pyzmail_decode_text
 from cgmail.urls import extract_urls as _extract_urls
 from cgmail.urls import extract_email_addresses as _extract_email_addresses
@@ -57,6 +58,33 @@ def parse_message(email):
     return message, parts
 
 
+def decode_message_headers(msg_headers):
+    '''
+    Decode MIME encoded-word headers
+    https://en.wikipedia.org/wiki/MIME#Encoded-Word
+
+    :param msg_headers: Dictionary of message headers
+    :return: Dictionary of message headers
+    '''
+
+    headers_to_decode = ['from', 'reply-to', 'subject', 'to']
+
+    for item in headers_to_decode:
+        return_list = []
+        try:
+            # decode the header
+            decoded_header = pyzmail_decode_mail_header(msg_headers[item][0])
+            # add the header to a list as we want to return a list
+            return_list.append(decoded_header)
+            # replace the item in the dict with a decoded version
+            msg_headers[item] = return_list
+
+        except KeyError:
+            pass
+
+    return msg_headers
+
+
 def parse_message_headers(msg):
 
     keys = msg.keys()
@@ -65,6 +93,9 @@ def parse_message_headers(msg):
 
     for k, v in zip(keys, values):
         msg_headers.setdefault(k.lower(), []).append(v)
+
+    # decode msg_headers
+    msg_headers = decode_message_headers(msg_headers)
 
     return msg_headers
 
