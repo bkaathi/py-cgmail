@@ -6,13 +6,16 @@ try:
 except ImportError:
     from urllib.parse import urlparse
 
+from pprint import pprint
+
 RE_URL_PLAIN = r'(https?://[^\s>]+)'
+RE_URL_DEFANGED = r'(hxxps?://[^\s>]+)'
 RE_IPV4 = re.compile('^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}')
 # http://stackoverflow.com/a/17871737
 RE_IPV6 = re.compile('(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))')
 # http://goo.gl/Cztyn2 -- probably needs more work
 RE_FQDN = re.compile('^((xn--)?(--)?[a-zA-Z0-9-_]+(-[a-zA-Z0-9]+)*\.)+[a-zA-Z]{2,}(--p1ai)?$')
-RE_URI_SCHEMES = re.compile('^(https?|ftp)$')
+RE_URI_SCHEMES = re.compile('^(https?|hxxps?|ftp)$')
 RE_EMAIL_ADDRESS = re.compile('([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)')
 
 def _extract_email_addresses_text(content):
@@ -81,10 +84,12 @@ def _fqdn(s):
         return 1
 
 
-def _extract_urls_text(content):
+def _extract_urls_text(content, defanged_urls=False):
     urls = set()
 
     found = re.findall(RE_URL_PLAIN, content)
+    if defanged_urls:
+        found = re.findall(RE_URL_DEFANGED, content)
 
     for u in found:
         if _url(u):
@@ -93,7 +98,7 @@ def _extract_urls_text(content):
     return urls
 
 
-def _extract_urls_html(body):
+def _extract_urls_html(body, defanged_urls=False):
     urls = set()
     soup = BeautifulSoup(body, "lxml")
 
@@ -105,14 +110,14 @@ def _extract_urls_html(body):
     return urls
 
 
-def extract_urls(content, html=False):
+def extract_urls(content, html=False, defanged_urls=False):
     urls = set()
 
     if content:
         if html:
-            urls = _extract_urls_html(content)
+            urls = _extract_urls_html(content, defanged_urls=defanged_urls)
         else:
-            urls = _extract_urls_text(content)
+            urls = _extract_urls_text(content, defanged_urls=defanged_urls)
     else:
         return urls
 

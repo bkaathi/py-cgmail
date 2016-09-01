@@ -157,7 +157,7 @@ def parse_message_parts(message_parts):
     return mail_parts
 
 
-def extract_urls(mail_parts):
+def extract_urls(mail_parts, defanged_urls=False):
 
     links = set()
 
@@ -166,10 +166,10 @@ def extract_urls(mail_parts):
     for mail_part in mail_parts:
         if mail_part['is_body']:
             if mail_part['is_body'].startswith('text/html'):
-                l = _extract_urls(mail_part['decoded_body'], html=True)
+                l = _extract_urls(mail_part['decoded_body'], html=True, defanged_urls=defanged_urls)
                 links.update(l)
             if mail_part['is_body'].startswith('text/plain'):
-                l = _extract_urls(mail_part['decoded_body'], html=False)
+                l = _extract_urls(mail_part['decoded_body'], html=False, defanged_urls=defanged_urls)
                 links.update(l)
     return links
 
@@ -205,7 +205,7 @@ def parse_attached_emails(attachments):
     return flattened
  
 
-def parse_email_from_string(email):
+def parse_email_from_string(email, defanged_urls=False):
 
     results = []
 
@@ -224,7 +224,7 @@ def parse_email_from_string(email):
     attachments = get_messages_as_attachments(message)
 
     # get urls from message body
-    d['urls'] = urls = extract_urls(mail_parts)
+    d['urls'] = urls = extract_urls(mail_parts, defanged_urls=defanged_urls)
 
     # get email addresses from message body
     d['body_email_addresses'] = email_addresses = extract_email_addresses(mail_parts)
