@@ -8,6 +8,7 @@ test:
 
 dependencies:
     pre:
+       - sudo apt-get update
        - pip install pytest
        - sudo apt-get install libxml2-dev libxslt1-dev libxml2
        - pip install --upgrade lxml
