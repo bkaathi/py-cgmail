@@ -84,6 +84,13 @@ def _fqdn(s):
         return 1
 
 
+def url_to_fqdn(s):
+    u = urlparse(s)
+    if re.match(RE_URI_SCHEMES, u.scheme):
+        if _fqdn(u.netloc):
+            return u.netloc
+
+
 def _extract_urls_text(content, defanged_urls=False):
     urls = set()
 
